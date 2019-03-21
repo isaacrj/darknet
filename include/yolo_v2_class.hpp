@@ -39,6 +39,8 @@ struct bbox_t_container {
     bbox_t candidates[C_SHARP_MAX_OBJECTS];
 };
 
+
+
 #ifdef __cplusplus
 #include <memory>
 #include <vector>
@@ -55,12 +57,10 @@ struct bbox_t_container {
 #include <opencv2/imgproc/imgproc_c.h>   // C
 #endif
 
-extern "C" LIB_API int init(const char *configurationFilename, const char *weightsFilename, int gpu);
-extern "C" LIB_API int detect_image(const char *filename, bbox_t_container &container);
-extern "C" LIB_API int detect_mat(const uint8_t* data, const size_t data_length, bbox_t_container &container);
-extern "C" LIB_API int dispose();
+
 extern "C" LIB_API int get_device_count();
 extern "C" LIB_API int get_device_name(int gpu, char* deviceName);
+
 
 class Detector {
     std::shared_ptr<void> detector_gpu_ptr;
@@ -180,6 +180,16 @@ private:
 
 };
 // --------------------------------------------------------------------------------
+
+
+extern "C" {
+	typedef Detector * DHandle;
+
+	LIB_API DHandle darknet_detector_init(const char *configurationFilename, const char *weightsFilename, int gpu);
+	LIB_API int darknet_detector_detect_image(DHandle detector, const char *filename, bbox_t_container &container);
+	LIB_API int darknet_detector_detect_mat(DHandle detector, cv::Mat &ptr, bbox_t_container &container, float threshold, bool use_mean);
+	LIB_API int darknet_detector_dispose(DHandle detector);
+}
 
 
 #if defined(TRACK_OPTFLOW) && defined(OPENCV) && defined(GPU)
@@ -1002,6 +1012,10 @@ public:
 // ----------------------------------------------
 #endif    // OPENCV
 
+
 #endif    // __cplusplus
 
 #endif    // YOLO_V2_CLASS_HPP
+
+
+

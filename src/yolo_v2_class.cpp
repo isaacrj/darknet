@@ -22,17 +22,16 @@ extern "C" {
 #include <algorithm>
 #include <cmath>
 
-
-//static Detector* detector = NULL;
-static std::unique_ptr<Detector> detector;
-
-int init(const char *configurationFilename, const char *weightsFilename, int gpu)
+DHandle darknet_detector_init(const char *configurationFilename, const char *weightsFilename, int gpu)
 {
-    detector.reset(new Detector(configurationFilename, weightsFilename, gpu));
-    return 1;
+	return new Detector(configurationFilename, weightsFilename, gpu);
 }
 
-int detect_image(const char *filename, bbox_t_container &container)
+int darknet_detector_jna_test() {
+	return 100;
+}
+
+int darknet_detector_detect_image(DHandle detector, const char *filename, bbox_t_container &container)
 {
     std::vector<bbox_t> detection = detector->detect(filename);
     for (size_t i = 0; i < detection.size() && i < C_SHARP_MAX_OBJECTS; ++i)
@@ -40,12 +39,11 @@ int detect_image(const char *filename, bbox_t_container &container)
     return detection.size();
 }
 
-int detect_mat(const uint8_t* data, const size_t data_length, bbox_t_container &container) {
+int darknet_detector_detect_mat(DHandle detector, cv::Mat &ptr, bbox_t_container &container, float threshold, bool use_mean) {
 #ifdef OPENCV
-    std::vector<char> vdata(data, data + data_length);
-    cv::Mat image = imdecode(cv::Mat(vdata), 1);
+    cv::Mat image = cv::Mat(ptr);
 
-    std::vector<bbox_t> detection = detector->detect(image);
+    std::vector<bbox_t> detection = detector->detect(image, threshold, use_mean);
     for (size_t i = 0; i < detection.size() && i < C_SHARP_MAX_OBJECTS; ++i)
         container.candidates[i] = detection[i];
     return detection.size();
@@ -54,10 +52,10 @@ int detect_mat(const uint8_t* data, const size_t data_length, bbox_t_container &
 #endif    // OPENCV
 }
 
-int dispose() {
+int darknet_detector_dispose(DHandle detector) {
     //if (detector != NULL) delete detector;
     //detector = NULL;
-    detector.reset();
+    delete detector;
     return 1;
 }
 
@@ -82,6 +80,8 @@ int get_device_name(int gpu, char* deviceName) {
     return -1;
 #endif	// GPU
 }
+
+
 
 #ifdef GPU
 void check_cuda(cudaError_t status) {

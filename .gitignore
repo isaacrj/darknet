@@ -29,6 +29,5 @@ Thumbs.db
 *.swp
 
 lib/
-include/
 share/
 

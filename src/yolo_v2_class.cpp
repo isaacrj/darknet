@@ -22,16 +22,18 @@ extern "C" {
 #include <algorithm>
 #include <cmath>
 
-DHandle darknet_detector_init(const char *configurationFilename, const char *weightsFilename, int gpu)
+#define NFRAMES 3
+
+//static Detector* detector = NULL;
+static std::unique_ptr<Detector> detector;
+
+int init(const char *configurationFilename, const char *weightsFilename, int gpu)
 {
-	return new Detector(configurationFilename, weightsFilename, gpu);
+    detector.reset(new Detector(configurationFilename, weightsFilename, gpu));
+    return 1;
 }
 
-int darknet_detector_jna_test() {
-	return 100;
-}
-
-int darknet_detector_detect_image(DHandle detector, const char *filename, bbox_t_container &container)
+int detect_image(const char *filename, bbox_t_container &container)
 {
     std::vector<bbox_t> detection = detector->detect(filename);
     for (size_t i = 0; i < detection.size() && i < C_SHARP_MAX_OBJECTS; ++i)
@@ -39,11 +41,12 @@ int darknet_detector_detect_image(DHandle detector, const char *filename, bbox_t
     return detection.size();
 }
 
-int darknet_detector_detect_mat(DHandle detector, cv::Mat &ptr, bbox_t_container &container, float threshold, bool use_mean) {
+int detect_mat(const uint8_t* data, const size_t data_length, bbox_t_container &container) {
 #ifdef OPENCV
-    cv::Mat image = cv::Mat(ptr);
+    std::vector<char> vdata(data, data + data_length);
+    cv::Mat image = imdecode(cv::Mat(vdata), 1);
 
-    std::vector<bbox_t> detection = detector->detect(image, threshold, use_mean);
+    std::vector<bbox_t> detection = detector->detect(image);
     for (size_t i = 0; i < detection.size() && i < C_SHARP_MAX_OBJECTS; ++i)
         container.candidates[i] = detection[i];
     return detection.size();
@@ -52,10 +55,10 @@ int darknet_detector_detect_mat(DHandle detector, cv::Mat &ptr, bbox_t_container
 #endif    // OPENCV
 }
 
-int darknet_detector_dispose(DHandle detector) {
+int dispose() {
     //if (detector != NULL) delete detector;
     //detector = NULL;
-    delete detector;
+    detector.reset();
     return 1;
 }
 
@@ -80,8 +83,6 @@ int get_device_name(int gpu, char* deviceName) {
     return -1;
 #endif	// GPU
 }
-
-
 
 #ifdef GPU
 void check_cuda(cudaError_t status) {
@@ -383,53 +384,6 @@ LIB_API std::vector<bbox_t> Detector::tracking_id(std::vector<bbox_t> cur_bbox_v
     return cur_bbox_vec;
 }
 
-
-LIB_API bool Detector::send_json_http(std::vector<bbox_t> cur_bbox_vec, std::vector<std::string> obj_names, int frame_id, std::string filename, int timeout, int port)
-{
-    //int timeout = 400000;
-    //int port = 8070;
-    //send_json(local_dets, local_nboxes, l.classes, demo_names, frame_id, demo_json_port, timeout);
-
-    std::string send_str;
-
-    char *tmp_buf = (char *)calloc(1024, sizeof(char));
-    if (!filename.empty()) {
-        sprintf(tmp_buf, "{\n \"frame_id\":%d, \n \"filename\":\"%s\", \n \"objects\": [ \n", frame_id, filename.c_str());
-    }
-    else {
-        sprintf(tmp_buf, "{\n \"frame_id\":%d, \n \"objects\": [ \n", frame_id);
-    }
-    send_str = tmp_buf;
-    free(tmp_buf);
-
-    for (auto & i : cur_bbox_vec) {
-        char *buf = (char *)calloc(2048, sizeof(char));
-
-        sprintf(buf, "  {\"class_id\":%d, \"name\":\"%s\", \"absolute_coordinates\":{\"center_x\":%d, \"center_y\":%d, \"width\":%d, \"height\":%d}, \"confidence\":%f",
-            i.obj_id, obj_names[i.obj_id].c_str(), i.x, i.y, i.w, i.h, i.prob);
-
-        //sprintf(buf, "  {\"class_id\":%d, \"name\":\"%s\", \"relative_coordinates\":{\"center_x\":%f, \"center_y\":%f, \"width\":%f, \"height\":%f}, \"confidence\":%f",
-        //    i.obj_id, obj_names[i.obj_id], i.x, i.y, i.w, i.h, i.prob);
-
-        send_str += buf;
-
-        if (!std::isnan(i.z_3d)) {
-            sprintf(buf, "\n    , \"coordinates_in_meters\":{\"x_3d\":%.2f, \"y_3d\":%.2f, \"z_3d\":%.2f}",
-                i.x_3d, i.y_3d, i.z_3d);
-            send_str += buf;
-        }
-
-        send_str += "}\n";
-
-        free(buf);
-    }
-
-    //send_str +=  "\n ] \n}, \n";
-    send_str += "\n ] \n}";
-
-    send_json_custom(send_str.c_str(), port, timeout);
-    return true;
-}
 
 void *Detector::get_cuda_context()
 {

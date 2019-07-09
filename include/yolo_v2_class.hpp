@@ -17,6 +17,7 @@
 #endif
 #endif
 
+#define NFRAMES 3
 #define C_SHARP_MAX_OBJECTS 1000
 
 struct bbox_t {
@@ -56,12 +57,6 @@ struct bbox_t_container {
 #include <opencv2/imgproc/imgproc_c.h>   // C
 #endif
 
-extern "C" LIB_API int init(const char *configurationFilename, const char *weightsFilename, int gpu);
-extern "C" LIB_API int detect_image(const char *filename, bbox_t_container &container);
-extern "C" LIB_API int detect_mat(const uint8_t* data, const size_t data_length, bbox_t_container &container);
-extern "C" LIB_API int dispose();
-extern "C" LIB_API int get_device_count();
-extern "C" LIB_API int get_device_name(int gpu, char* deviceName);
 extern "C" LIB_API void send_json_custom(char const* send_buf, int port, int timeout);
 
 class Detector {
@@ -79,6 +74,7 @@ public:
     LIB_API std::vector<bbox_t> detect(image_t img, float thresh = 0.2, bool use_mean = false);
     static LIB_API image_t load_image(std::string image_filename);
     static LIB_API void free_image(image_t m);
+
     LIB_API int get_net_width() const;
     LIB_API int get_net_height() const;
     LIB_API int get_net_color_depth() const;
@@ -136,8 +132,6 @@ public:
         return image_ptr;
     }
 
-private:
-
     static image_t mat_to_image_custom(cv::Mat mat)
     {
         int w = mat.cols;
@@ -155,6 +149,11 @@ private:
         }
         return im;
     }
+
+private:
+
+   
+
 
     static image_t make_empty_image(int w, int h, int c)
     {
@@ -222,6 +221,36 @@ public:
     }
 };
 // --------------------------------------------------------------------------------
+
+
+// API PARA JNA
+
+extern "C" {
+	typedef Detector * DHandle;
+	
+	LIB_API DHandle darknet_detector_init(const char *configurationFilename, const char *weightsFilename, int gpu);
+
+	LIB_API image_t* darknet_allocate_direct_image(int width, int height, int channels);
+
+	LIB_API int darknet_write_direct_image(image_t *out, int step, unsigned char *bgrData);
+#ifdef OPENCV
+	LIB_API int darknet_write_direct_image(image_t *out, cv::Mat &mat);
+	LIB_API image_t* darknet_create_direct_image(cv::Mat &mat);
+	LIB_API int darknet_detector_detect_mat(DHandle detector, cv::Mat &ptr, bbox_t_container &container, int container_length, float threshold, bool use_mean);
+#endif
+	LIB_API void darknet_free_direct_image(image_t* image);
+
+	LIB_API int darknet_detector_get_net_width(DHandle detector);
+	LIB_API int darknet_detector_get_net_height(DHandle detector);
+	LIB_API int darknet_detector_get_net_color_depth(DHandle detector);
+
+	LIB_API int darknet_detector_detect_image(DHandle detector, image_t &ptr, bbox_t_container &container, int container_length, float threshold, bool use_mean);
+	LIB_API int darknet_detector_detect_image_resized(DHandle detector, image_t &ptr, int frame_width, int frame_height, bbox_t_container &container, int container_length, float threshold, bool use_mean);
+	LIB_API int darknet_detector_dispose(DHandle detector);
+
+	LIB_API int get_device_count();
+	LIB_API int get_device_name(int gpu, char* deviceName);
+}
 
 
 #if defined(TRACK_OPTFLOW) && defined(OPENCV) && defined(GPU)

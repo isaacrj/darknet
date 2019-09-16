@@ -920,10 +920,15 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
             float dy = ((float)ptop / oh) / sy;
 
 
+<<<<<<< HEAD
             int min_w_h = fill_truth_detection(filename, boxes, truth, classes, flip, dx, dy, 1. / sx, 1. / sy, w, h);
 
             if (min_w_h < blur*4) blur = 0;   // disable blur if one of the objects is too small
 
+=======
+            fill_truth_detection(filename, boxes, truth, classes, flip, dx, dy, 1. / sx, 1. / sy, w, h);
+
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
             image ai = image_data_augmentation(src, w, h, pleft, ptop, swidth, sheight, flip, dhue, dsat, dexp,
                 blur, boxes, d.y.vals[i]);
 
@@ -945,7 +950,11 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
             {
                 image tmp_ai = copy_image(ai);
                 char buff[1000];
+<<<<<<< HEAD
                 sprintf(buff, "aug_%d_%d_%s_%d", random_index, i, basecfg((char*)filename), random_gen());
+=======
+                sprintf(buff, "aug_%d_%d_%s_%d", random_index, i, basecfg(filename), random_gen());
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
                 int t;
                 for (t = 0; t < boxes; ++t) {
                     box b = float_to_box_stride(d.y.vals[i] + t*(4 + 1), 1);
@@ -959,9 +968,12 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
 
                 save_image(tmp_ai, buff);
                 if (show_imgs == 1) {
+<<<<<<< HEAD
                     //char buff_src[1000];
                     //sprintf(buff_src, "src_%d_%d_%s_%d", random_index, i, basecfg((char*)filename), random_gen());
                     //show_image_mat(src, buff_src);
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
                     show_image(tmp_ai, buff);
                     wait_until_press_key_cv();
                 }

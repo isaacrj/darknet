@@ -8,6 +8,7 @@ include(CMakeFindDependencyMacro)
 if(@OpenCV_FOUND@)
   find_dependency(OpenCV)
 endif()
+<<<<<<< HEAD
 
 if(@ENABLE_CUDA@)
   include(CheckLanguage)
@@ -17,6 +18,12 @@ if(@ENABLE_CUDA@)
   endif()
   find_dependency(CUDA)
   cuda_select_nvcc_arch_flags(CUDA_ARCH_FLAGS ${CUDA_ARCHITECTURES})
+=======
+
+find_dependency(Stb)
+
+if(@ENABLE_CUDA@)
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
   if(@CUDNN_FOUND@)
     find_dependency(CUDNN)
   endif()
@@ -36,6 +43,7 @@ endif()
 
 # Our library dependencies (contains definitions for IMPORTED targets)
 include("${Darknet_CMAKE_DIR}/DarknetTargets.cmake")
+<<<<<<< HEAD
 include("${Darknet_CMAKE_DIR}/DarknetConfigVersion.cmake")
 
 get_target_property(FULL_DARKNET_INCLUDE_DIRS Darknet::dark INTERFACE_INCLUDE_DIRECTORIES)
@@ -43,3 +51,5 @@ list(GET FULL_DARKNET_INCLUDE_DIRS 0 Darknet_INCLUDE_DIR)
 get_filename_component(Darknet_INCLUDE_DIR "${Darknet_INCLUDE_DIR}" REALPATH)
 
 find_package_handle_standard_args(Darknet REQUIRED_VARS Darknet_INCLUDE_DIR VERSION_VAR PACKAGE_VERSION)
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab

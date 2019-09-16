@@ -207,8 +207,11 @@ dxrep dx_box_iou(box pred, box truth, IOU_LOSS iou_loss) {
         p_dr = ((U * dI_wrt_r) - (I * dU_wrt_r)) / (U * U);
     }
 
+<<<<<<< HEAD
     // GIoU = I/U - (C-U)/C
     // C is the smallest convex hull that encloses both Detection and Truth
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     if (iou_loss == GIOU) {
         if (C > 0) {
             // apply "C" term from gIOU

@@ -194,30 +194,149 @@ int darknet_detector_dispose(DHandle detector) {
 }
 
 
-//static Detector* detector = NULL;
-static std::unique_ptr<Detector> detector;
+// SCIO 
+// API para atacar el detector directamente desde JNA
 
-int init(const char *configurationFilename, const char *weightsFilename, int gpu)
+
+DHandle darknet_detector_init(const char *configurationFilename, const char *weightsFilename, int gpu)
 {
-    detector.reset(new Detector(configurationFilename, weightsFilename, gpu));
-    return 1;
+	return new Detector(configurationFilename, weightsFilename, gpu);
 }
 
-int detect_image(const char *filename, bbox_t_container &container)
+LIB_API image_t* darknet_allocate_direct_image(int width, int height, int channels) {
+
+	// Creamos la estructura de la image
+	image_t *out = (image_t *) malloc(sizeof(image_t));
+        out->w = width;
+        out->h = height;
+        out->c = channels;
+
+	// Reservamos espacio en memoria para los datos que va a contener
+	out->data = (float *)calloc(width*height*channels, sizeof(float));	
+
+	return out;
+}
+
+LIB_API int darknet_write_direct_image(image_t *out, int step, unsigned char *bgrData)  {
+	int w = out->w;
+	int h = out->h;
+	int c = out->c;
+
+	// Copiamos los datos de la matriz dentro de la imagen
+	for (int k = 0; k < c; ++k) {
+	    // Aprovechamos la iteracion para cambiar el espacio de color 
+	    // de BGR (que es el que trae la matriz de OpenCV, a RGB que es
+	    // el espacio que acepta la red
+	    int matK = k;
+	    switch (k) {
+		case 0:
+		   // Canal Rojo, en la matriz es el canal 2
+	           matK=2;
+ 		   break;
+
+		case 2:
+		   // Canal Verde, en la matriz es el canal 0
+	           matK=0;
+ 		   break;
+
+	    }
+
+	    for (int y = 0; y < h; ++y) {
+	        for (int x = 0; x < w; ++x) {
+	            out->data[k*w*h + y*w + x] = bgrData[y*step + x*c + matK] / 255.0f;
+	        }
+	    }
+	}	
+	return 1;
+
+}
+
+#ifdef OPENCV
+
+LIB_API int darknet_write_direct_image(image_t *out, cv::Mat &mat)  {
+	int w = out->w;
+	int h = out->h;
+	int c = out->c;
+
+	if (mat.cols == w && mat.rows == h && mat.channels() == c) {
+		return darknet_write_direct_image(out, mat.step, (unsigned char *) mat.data);
+	} else {
+		return 0;
+	}
+}
+
+LIB_API image_t* darknet_create_direct_image(cv::Mat &mat) 
 {
-    std::vector<bbox_t> detection = detector->detect(filename);
-    for (size_t i = 0; i < detection.size() && i < C_SHARP_MAX_OBJECTS; ++i)
+	int w = mat.cols;
+	int h = mat.rows;
+	int c = mat.channels();
+
+
+	image_t *out = darknet_allocate_direct_image(w,h,c);
+	darknet_write_direct_image(out,mat);
+
+/*
+        
+	// Copiamos los datos de la matriz dentro de la imagen
+	unsigned char *data = (unsigned char *)mat.data;
+        int step = mat.step;
+        for (int k = 0; k < c; ++k) {
+	    // Aprovechamos la iteracion para cambiar el espacio de color 
+	    // de BGR (que es el que trae la matriz de OpenCV, a RGB que es
+            // el espacio que acepta la red
+	    int matK = k;
+	    switch (k) {
+		case 0:
+		   // Canal Rojo, en la matriz es el canal 2
+                   matK=2;
+ 		   break;
+
+		case 2:
+		   // Canal Verde, en la matriz es el canal 0
+                   matK=0;
+ 		   break;
+
+	    }
+
+	    for (int y = 0; y < h; ++y) {
+                for (int x = 0; x < w; ++x) {
+                    out->data[k*w*h + y*w + x] = data[y*step + x*c + matK] / 255.0f;
+                }
+            }
+        }	
+*/
+	return out;
+}
+
+int darknet_detector_detect_mat(DHandle detector, cv::Mat &ptr, bbox_t_container &container, int container_length, float threshold, bool use_mean) {
+    cv::Mat image = cv::Mat(ptr);
+    std::vector<bbox_t> detection = detector->detect(image, threshold, use_mean);
+    for (size_t i = 0; i < detection.size() && i < container_length; ++i)
         container.candidates[i] = detection[i];
     return detection.size();
 }
 
-int detect_mat(const uint8_t* data, const size_t data_length, bbox_t_container &container) {
-#ifdef OPENCV
-    std::vector<char> vdata(data, data + data_length);
-    cv::Mat image = imdecode(cv::Mat(vdata), 1);
+#endif // OPENCV
 
-    std::vector<bbox_t> detection = detector->detect(image);
-    for (size_t i = 0; i < detection.size() && i < C_SHARP_MAX_OBJECTS; ++i)
+int darknet_detector_detect_image(DHandle detector, image_t &ptr,bbox_t_container &container, int container_length, float threshold, bool use_mean) {
+    std::vector<bbox_t> detection = detector->detect(ptr, threshold, use_mean);
+    for (size_t i = 0; i < detection.size() && i < container_length; ++i)
+        container.candidates[i] = detection[i];
+    return detection.size();
+}
+
+
+LIB_API void darknet_free_direct_image(image_t *img)
+{
+	Detector::free_image(*img);
+	free(img);
+}
+
+
+int darknet_detector_detect_image_resized(DHandle detector, image_t &ptr, int frame_width, int frame_height, bbox_t_container &container, int container_length, float threshold, bool use_mean) {
+#ifdef OPENCV
+    std::vector<bbox_t> detection = detector->detect_resized(ptr, frame_width, frame_height, threshold, use_mean);
+    for (size_t i = 0; i < detection.size() && i < container_length; ++i)
         container.candidates[i] = detection[i];
     return detection.size();
 #else
@@ -225,10 +344,22 @@ int detect_mat(const uint8_t* data, const size_t data_length, bbox_t_container &
 #endif    // OPENCV
 }
 
-int dispose() {
+int darknet_detector_get_net_width(DHandle detector) {
+	return detector->get_net_width();
+}
+
+int darknet_detector_get_net_height(DHandle detector) {
+	return detector->get_net_height();
+}
+
+int darknet_detector_get_net_color_depth(DHandle detector) {
+	return detector->get_net_color_depth();
+}
+
+int darknet_detector_dispose(DHandle detector) {
     //if (detector != NULL) delete detector;
     //detector = NULL;
-    detector.reset();
+    delete detector;
     return 1;
 }
 
@@ -278,6 +409,12 @@ int get_device_name(int gpu, char* deviceName) {
     return -1;
 #endif	// GPU
 }
+
+
+
+
+// FIN DE LA API PARA JNA
+
 
 #ifdef GPU
 void check_cuda(cudaError_t status) {
@@ -382,6 +519,7 @@ LIB_API int Detector::get_net_color_depth() const {
 }
 
 
+
 LIB_API std::vector<bbox_t> Detector::detect(std::string image_filename, float thresh, bool use_mean)
 {
     std::shared_ptr<image_t> image_ptr(new image_t, [](image_t *img) { if (img->data) free(img->data); delete img; });
@@ -433,6 +571,7 @@ LIB_API void Detector::free_image(image_t m)
     }
 }
 
+
 LIB_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool use_mean)
 {
     detector_gpu_t &detector_gpu = *static_cast<detector_gpu_t *>(detector_gpu_ptr.get());
@@ -454,17 +593,26 @@ LIB_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool use
     im.w = img.w;
 
     image sized;
+    int resized = 0;
 
+
+    float *X;
     if (net.w == im.w && net.h == im.h) {
-        sized = make_image(im.w, im.h, im.c);
-        memcpy(sized.data, im.data, im.w*im.h*im.c * sizeof(float));
+	// SCIO: Evitamos otra copia mas aqui. Si las dimensiones de la imagen proporcionada
+	// coinciden con las de la red, utilizamos directamente la imagen proporcionada
+	X = im.data;
+
+//        sized = make_image(im.w, im.h, im.c);
+//        memcpy(sized.data, im.data, im.w*im.h*im.c * sizeof(float));
     }
-    else
-        sized = resize_image(im, net.w, net.h);
+    else {
+	   sized = resize_image(im, net.w, net.h);
+	   X = sized.data;
+	   resized = 1;
+    }
+     
 
     layer l = net.layers[net.n - 1];
-
-    float *X = sized.data;
 
     float *prediction = network_predict(net, X);
 
@@ -510,7 +658,7 @@ LIB_API std::vector<bbox_t> Detector::detect(image_t img, float thresh, bool use
     }
 
     free_detections(dets, nboxes);
-    if(sized.data)
+    if(resized)
         free(sized.data);
 
 #ifdef GPU

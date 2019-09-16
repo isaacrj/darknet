@@ -57,6 +57,12 @@ endif()
 
 set(CUDNN_INCLUDE_DIRS ${CUDNN_INCLUDE_DIR})
 set(CUDNN_LIBRARIES ${CUDNN_LIBRARY})
+<<<<<<< HEAD
+=======
+if(CUDNN_FOUND)
+  message(STATUS "Found cuDNN: v${CUDNN_VERSION}  (include: ${CUDNN_INCLUDE_DIR}, library: ${CUDNN_LIBRARY})")
+endif()
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
 mark_as_advanced(CUDNN_LIBRARY CUDNN_INCLUDE_DIR)
 
 find_package_handle_standard_args(CUDNN

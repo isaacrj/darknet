@@ -122,6 +122,7 @@ void backward_scale_channels_gpu(float *in_w_h_c_delta, int size, int channel_si
     float *in_scales_c, float *out_from_delta,
     float *in_from_output, float *out_state_delta);
 
+<<<<<<< HEAD
 
 void backward_sam_gpu(float *in_w_h_c_delta, int size, int channel_size,
     float *in_scales_c, float *out_from_delta,
@@ -129,6 +130,8 @@ void backward_sam_gpu(float *in_w_h_c_delta, int size, int channel_size,
 
 void sam_gpu(float *in_w_h_c, int size, int channel_size, float *scales_c, float *out);
 
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
 #endif
 #ifdef __cplusplus
 }

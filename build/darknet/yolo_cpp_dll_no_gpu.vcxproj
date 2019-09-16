@@ -214,7 +214,10 @@
     <ClCompile Include="..\..\src\rnn_layer.c" />
     <ClCompile Include="..\..\src\rnn_vid.c" />
     <ClCompile Include="..\..\src\route_layer.c" />
+<<<<<<< HEAD
     <ClCompile Include="..\..\src\sam_layer.c" />
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     <ClCompile Include="..\..\src\scale_channels_layer.c" />
     <ClCompile Include="..\..\src\shortcut_layer.c" />
     <ClCompile Include="..\..\src\softmax_layer.c" />
@@ -276,7 +279,10 @@
     <ClInclude Include="..\..\src\reorg_old_layer.h" />
     <ClInclude Include="..\..\src\rnn_layer.h" />
     <ClInclude Include="..\..\src\route_layer.h" />
+<<<<<<< HEAD
     <ClInclude Include="..\..\src\sam_layer.h" />
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     <ClInclude Include="..\..\src\scale_channels_layer.h" />
     <ClInclude Include="..\..\src\shortcut_layer.h" />
     <ClInclude Include="..\..\src\softmax_layer.h" />

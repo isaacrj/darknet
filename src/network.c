@@ -528,8 +528,13 @@ int resize_network(network *net, int w, int h)
             resize_route_layer(&l, net);
         }else if (l.type == SHORTCUT) {
             resize_shortcut_layer(&l, w, h);
+<<<<<<< HEAD
         //}else if (l.type == SCALE_CHANNELS) {
         //    resize_scale_channels_layer(&l, w, h);
+=======
+        }else if (l.type == SCALE_CHANNELS) {
+            resize_scale_channels_layer(&l, w, h);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
         }else if (l.type == UPSAMPLE) {
             resize_upsample_layer(&l, w, h);
         }else if(l.type == REORG){

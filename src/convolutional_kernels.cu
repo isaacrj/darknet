@@ -574,7 +574,11 @@ void forward_convolutional_layer_gpu(convolutional_layer l, network_state state)
                     l.h, l.w,               // input size (h, w)
                     l.size, l.size,         // kernel size (h, w)
                     l.pad, l.pad,           // padding (h, w)
+<<<<<<< HEAD
                     l.stride_y, l.stride_x,     // stride (h, w)
+=======
+                    l.stride, l.stride,     // stride (h, w)
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
                     l.dilation, l.dilation, // dilation (h, w)
                     state.workspace);       // output
 
@@ -845,7 +849,11 @@ void backward_convolutional_layer_gpu(convolutional_layer l, network_state state
                 l.h, l.w,               // input size (h, w)
                 l.size, l.size,         // kernel size (h, w)
                 l.pad, l.pad,           // padding (h, w)
+<<<<<<< HEAD
                 l.stride_y, l.stride_x,     // stride (h, w)
+=======
+                l.stride, l.stride,     // stride (h, w)
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
                 l.dilation, l.dilation, // dilation (h, w)
                 state.workspace);       // output
             //gemm_ongpu(0, 1, m, n, k, 1, a + i*m*k, k, b, k, 1, c, n);
@@ -870,7 +878,11 @@ void backward_convolutional_layer_gpu(convolutional_layer l, network_state state
                     l.h, l.w,               // input size (h, w)
                     l.size, l.size,         // kernel size (h, w)
                     l.pad, l.pad,           // padding size (h, w)
+<<<<<<< HEAD
                     l.stride_y, l.stride_x,     // stride size (h, w)
+=======
+                    l.stride, l.stride,     // stride size (h, w)
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
                     l.dilation, l.dilation, // dilation size (h, w)
                     delta);                 // output (delta)
 
@@ -892,6 +904,7 @@ void backward_convolutional_layer_gpu(convolutional_layer l, network_state state
     }
 }
 
+<<<<<<< HEAD
 static box float_to_box_stride(float *f, int stride)
 {
     box b = { 0 };
@@ -1100,6 +1113,8 @@ void assisted_excitation_forward_gpu(convolutional_layer l, network_state state)
     free(a_avg);
 }
 
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
 void pull_convolutional_layer(convolutional_layer l)
 {
     cuda_pull_array_async(l.weights_gpu, l.weights, l.nweights);

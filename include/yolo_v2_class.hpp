@@ -17,6 +17,7 @@
 #endif
 #endif
 
+#define NFRAMES 3
 #define C_SHARP_MAX_OBJECTS 1000
 
 struct bbox_t {
@@ -56,6 +57,7 @@ struct bbox_t_container {
 #include <opencv2/imgproc/imgproc_c.h>   // C
 #endif
 
+<<<<<<< HEAD
 extern "C" LIB_API int init(const char *configurationFilename, const char *weightsFilename, int gpu);
 extern "C" LIB_API int detect_image(const char *filename, bbox_t_container &container);
 extern "C" LIB_API int detect_mat(const uint8_t* data, const size_t data_length, bbox_t_container &container);
@@ -65,6 +67,8 @@ extern "C" LIB_API int get_device_name(int gpu, char* deviceName);
 extern "C" LIB_API bool built_with_cuda();
 extern "C" LIB_API bool built_with_cudnn();
 extern "C" LIB_API bool built_with_opencv();
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
 extern "C" LIB_API void send_json_custom(char const* send_buf, int port, int timeout);
 
 class Detector {
@@ -82,6 +86,7 @@ public:
     LIB_API std::vector<bbox_t> detect(image_t img, float thresh = 0.2, bool use_mean = false);
     static LIB_API image_t load_image(std::string image_filename);
     static LIB_API void free_image(image_t m);
+
     LIB_API int get_net_width() const;
     LIB_API int get_net_height() const;
     LIB_API int get_net_color_depth() const;
@@ -91,7 +96,11 @@ public:
 
     LIB_API void *get_cuda_context();
 
+<<<<<<< HEAD
     //LIB_API bool send_json_http(std::vector<bbox_t> cur_bbox_vec, std::vector<std::string> obj_names, int frame_id,
+=======
+    //LIB_API bool send_json_http(std::vector<bbox_t> cur_bbox_vec, std::vector<std::string> obj_names, int frame_id, 
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     //    std::string filename = std::string(), int timeout = 400000, int port = 8070);
 
     std::vector<bbox_t> detect_resized(image_t img, int init_w, int init_h, float thresh = 0.2, bool use_mean = false)
@@ -139,8 +148,11 @@ public:
         return image_ptr;
     }
 
+<<<<<<< HEAD
 private:
 
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     static image_t mat_to_image_custom(cv::Mat mat)
     {
         int w = mat.cols;
@@ -158,6 +170,11 @@ private:
         }
         return im;
     }
+
+private:
+
+   
+
 
     static image_t make_empty_image(int w, int h, int c)
     {

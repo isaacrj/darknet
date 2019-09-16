@@ -66,44 +66,76 @@ layer make_conv_lstm_layer(int batch, int h, int w, int c, int output_filters, i
 
     // U
     l.uf = (layer*)calloc(1, sizeof(layer));
+<<<<<<< HEAD
     *(l.uf) = make_convolutional_layer(batch, steps, h, w, c, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+    *(l.uf) = make_convolutional_layer(batch, steps, h, w, c, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     l.uf->batch = batch;
     if (l.workspace_size < l.uf->workspace_size) l.workspace_size = l.uf->workspace_size;
 
     l.ui = (layer*)calloc(1, sizeof(layer));
+<<<<<<< HEAD
     *(l.ui) = make_convolutional_layer(batch, steps, h, w, c, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+    *(l.ui) = make_convolutional_layer(batch, steps, h, w, c, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     l.ui->batch = batch;
     if (l.workspace_size < l.ui->workspace_size) l.workspace_size = l.ui->workspace_size;
 
     l.ug = (layer*)calloc(1, sizeof(layer));
+<<<<<<< HEAD
     *(l.ug) = make_convolutional_layer(batch, steps, h, w, c, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+    *(l.ug) = make_convolutional_layer(batch, steps, h, w, c, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     l.ug->batch = batch;
     if (l.workspace_size < l.ug->workspace_size) l.workspace_size = l.ug->workspace_size;
 
     l.uo = (layer*)calloc(1, sizeof(layer));
+<<<<<<< HEAD
     *(l.uo) = make_convolutional_layer(batch, steps, h, w, c, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+    *(l.uo) = make_convolutional_layer(batch, steps, h, w, c, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     l.uo->batch = batch;
     if (l.workspace_size < l.uo->workspace_size) l.workspace_size = l.uo->workspace_size;
 
 
     // W
     l.wf = (layer*)calloc(1, sizeof(layer));
+<<<<<<< HEAD
     *(l.wf) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+    *(l.wf) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     l.wf->batch = batch;
     if (l.workspace_size < l.wf->workspace_size) l.workspace_size = l.wf->workspace_size;
 
     l.wi = (layer*)calloc(1, sizeof(layer));
+<<<<<<< HEAD
     *(l.wi) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+    *(l.wi) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     l.wi->batch = batch;
     if (l.workspace_size < l.wi->workspace_size) l.workspace_size = l.wi->workspace_size;
 
     l.wg = (layer*)calloc(1, sizeof(layer));
+<<<<<<< HEAD
     *(l.wg) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+    *(l.wg) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     l.wg->batch = batch;
     if (l.workspace_size < l.wg->workspace_size) l.workspace_size = l.wg->workspace_size;
 
     l.wo = (layer*)calloc(1, sizeof(layer));
+<<<<<<< HEAD
     *(l.wo) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+    *(l.wo) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     l.wo->batch = batch;
     if (l.workspace_size < l.wo->workspace_size) l.workspace_size = l.wo->workspace_size;
 
@@ -111,21 +143,33 @@ layer make_conv_lstm_layer(int batch, int h, int w, int c, int output_filters, i
     // V
     l.vf = (layer*)calloc(1, sizeof(layer));
     if (l.peephole) {
+<<<<<<< HEAD
         *(l.vf) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+        *(l.vf) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
         l.vf->batch = batch;
         if (l.workspace_size < l.vf->workspace_size) l.workspace_size = l.vf->workspace_size;
     }
 
     l.vi = (layer*)calloc(1, sizeof(layer));
     if (l.peephole) {
+<<<<<<< HEAD
         *(l.vi) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+        *(l.vi) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
         l.vi->batch = batch;
         if (l.workspace_size < l.vi->workspace_size) l.workspace_size = l.vi->workspace_size;
     }
 
     l.vo = (layer*)calloc(1, sizeof(layer));
     if (l.peephole) {
+<<<<<<< HEAD
         *(l.vo) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, 0, NULL, 0);
+=======
+        *(l.vo) = make_convolutional_layer(batch, steps, h, w, output_filters, output_filters, groups, size, stride, dilation, pad, activation, batch_normalize, 0, xnor, 0, 0, 0, NULL);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
         l.vo->batch = batch;
         if (l.workspace_size < l.vo->workspace_size) l.workspace_size = l.vo->workspace_size;
     }

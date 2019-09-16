@@ -137,7 +137,10 @@ typedef enum {
     LOCAL,
     SHORTCUT,
     SCALE_CHANNELS,
+<<<<<<< HEAD
     SAM,
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     ACTIVE,
     RNN,
     GRU,
@@ -208,10 +211,14 @@ struct layer {
     int size;
     int side;
     int stride;
+<<<<<<< HEAD
     int stride_x;
     int stride_y;
     int dilation;
     int antialiasing;
+=======
+    int dilation;
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     int maxpool_depth;
     int out_channels;
     int reverse;
@@ -588,8 +595,11 @@ typedef struct network {
     int time_steps;
     int step;
     int max_batches;
+<<<<<<< HEAD
     int num_boxes;
     int train_images_num;
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     float *seq_scales;
     float *scales;
     int   *steps;

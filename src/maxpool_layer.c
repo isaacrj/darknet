@@ -46,7 +46,11 @@ void cudnn_maxpool_setup(layer *l)
 }
 
 
+<<<<<<< HEAD
 maxpool_layer make_maxpool_layer(int batch, int h, int w, int c, int size, int stride_x, int stride_y, int padding, int maxpool_depth, int out_channels, int antialiasing)
+=======
+maxpool_layer make_maxpool_layer(int batch, int h, int w, int c, int size, int stride, int padding, int maxpool_depth, int out_channels)
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
 {
     maxpool_layer l = { (LAYER_TYPE)0 };
     l.type = MAXPOOL;
@@ -71,8 +75,13 @@ maxpool_layer make_maxpool_layer(int batch, int h, int w, int c, int size, int s
         l.out_h = l.h;
     }
     else {
+<<<<<<< HEAD
         l.out_w = (w + padding - size) / stride_x + 1;
         l.out_h = (h + padding - size) / stride_y + 1;
+=======
+        l.out_w = (w + padding - size) / stride + 1;
+        l.out_h = (h + padding - size) / stride + 1;
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
         l.out_c = c;
     }
     l.outputs = l.out_h * l.out_w * l.out_c;
@@ -98,6 +107,7 @@ maxpool_layer make_maxpool_layer(int batch, int h, int w, int c, int size, int s
 
     #endif  // GPU
 	l.bflops = (l.size*l.size*l.c * l.out_h*l.out_w) / 1000000000.;
+<<<<<<< HEAD
     if (maxpool_depth)
         fprintf(stderr, "max-depth         %2dx%2d/%2d   %4d x%4d x%4d -> %4d x%4d x%4d %5.3f BF\n", size, size, stride_x, w, h, c, l.out_w, l.out_h, l.out_c, l.bflops);
     else if(stride_x == stride_y)
@@ -145,6 +155,9 @@ maxpool_layer make_maxpool_layer(int batch, int h, int w, int c, int size, int s
 #endif  // GPU
     }
 
+=======
+    fprintf(stderr, "max               %d x %d/%2d   %4d x%4d x%4d -> %4d x%4d x%4d %5.3f BF\n", size, size, stride, w, h, c, l.out_w, l.out_h, l.out_c, l.bflops);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     return l;
 }
 
@@ -154,8 +167,13 @@ void resize_maxpool_layer(maxpool_layer *l, int w, int h)
     l->w = w;
     l->inputs = h*w*l->c;
 
+<<<<<<< HEAD
     l->out_w = (w + l->pad - l->size) / l->stride_x + 1;
     l->out_h = (h + l->pad - l->size) / l->stride_y + 1;
+=======
+    l->out_w = (w + l->pad - l->size) / l->stride + 1;
+    l->out_h = (h + l->pad - l->size) / l->stride + 1;
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
     l->outputs = l->out_w * l->out_h * l->out_c;
     int output_size = l->outputs * l->batch;
 
@@ -204,6 +222,15 @@ void forward_maxpool_layer(const maxpool_layer l, network_state state)
                 }
             }
         }
+<<<<<<< HEAD
+=======
+        return;
+    }
+
+
+    if (!state.train) {
+        forward_maxpool_layer_avx(state.input, l.output, l.indexes, l.size, l.w, l.h, l.out_w, l.out_h, l.c, l.pad, l.stride, l.batch);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
         return;
     }
 

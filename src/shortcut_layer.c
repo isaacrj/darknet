@@ -21,9 +21,13 @@ layer make_shortcut_layer(int batch, int index, int w, int h, int c, int w2, int
     l.outputs = w*h*c;
     l.inputs = l.outputs;
 
+<<<<<<< HEAD
     l.assisted_excitation = assisted_excitation;
 
     if(w != w2 || h != h2 || c != c2) fprintf(stderr, " w = %d, w2 = %d, h = %d, h2 = %d, c = %d, c2 = %d \n", w, w2, h, h2, c, c2);
+=======
+    if(w != w2 || h != h2 || c != c) fprintf(stderr, " w = %d, w2 = %d, h = %d, h2 = %d, c = %d, c2 = %d \n", w, w2, h, h2, c, c2);
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
 
     l.index = index;
 

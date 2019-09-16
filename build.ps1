@@ -2,8 +2,11 @@
 
 $number_of_build_workers=8
 $use_vcpkg=$true
+<<<<<<< HEAD
 $use_ninja=$false
 $force_cpp_build=$false
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
 
 function getProgramFiles32bit() {
   $out = ${env:PROGRAMFILES(X86)}
@@ -110,7 +113,26 @@ if ($null -eq (Get-Command "cl.exe" -ErrorAction SilentlyContinue)) {
   }
   Pop-Location
   Write-Host "Visual Studio Command Prompt variables set" -ForegroundColor Yellow
+<<<<<<< HEAD
+=======
 }
+
+$tokens = getLatestVisualStudioWithDesktopWorkloadVersion
+$tokens = $tokens.split('.')
+if ($tokens[0] -eq "14") {
+  $generator = "Visual Studio 14 2015"
+}
+elseif ($tokens[0] -eq "15") {
+  $generator = "Visual Studio 15 2017"
+}
+elseif ($tokens[0] -eq "16") {
+  $generator = "Visual Studio 16 2019"
+}
+else {
+  throw "Unknown Visual Studio version, unsupported configuration"
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
+}
+Write-Host "Setting up environment to use CMake generator: $generator" -ForegroundColor Yellow
 
 $tokens = getLatestVisualStudioWithDesktopWorkloadVersion
 $tokens = $tokens.split('.')
@@ -150,14 +172,18 @@ if (Test-Path env:CUDA_PATH) {
   }
 }
 
+<<<<<<< HEAD
 if($force_cpp_build) {
   $additional_build_setup="-DBUILD_AS_CPP:BOOL=TRUE"
 }
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
 
 if ($use_vcpkg) {
   ## DEBUG
   #New-Item -Path .\build_win_debug -ItemType directory -Force
   #Set-Location build_win_debug
+<<<<<<< HEAD
   #if ($use_ninja) {
     #cmake -G "$generator" "-DCMAKE_TOOLCHAIN_FILE=$vcpkg_path\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=$vcpkg_triplet" #"-DCMAKE_BUILD_TYPE=Debug" $additional_build_setup ..
     #$dllfolder = "."
@@ -166,20 +192,28 @@ if ($use_vcpkg) {
     #cmake -G "$generator" -T "host=x64" -A "x64" "-DCMAKE_TOOLCHAIN_FILE=$vcpkg_path\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=$vcpkg_triplet" "-DCMAKE_BUILD_TYPE=Debug" $additional_build_setup ..
     #$dllfolder = "Debug"
   #}
+=======
+  #cmake -G "$generator" -T "host=x64" -A "x64" "-DCMAKE_TOOLCHAIN_FILE=$vcpkg_path\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=$vcpkg_triplet" #"-DCMAKE_BUILD_TYPE=Debug" $additional_build_setup ..
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
   #cmake --build . --config Debug --target install
   ##cmake --build . --config Debug --parallel ${number_of_build_workers} --target install  #valid only for CMake 3.12+
   #Remove-Item DarknetConfig.cmake
   #Remove-Item DarknetConfigVersion.cmake
+<<<<<<< HEAD
   #$dllfiles = Get-ChildItem ${dllfolder}\*.dll
   #if ($dllfiles) {
   #  Copy-Item $dllfiles ..
   #}
+=======
+  #Copy-Item Debug\*.dll ..
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
   #Set-Location ..
   #Copy-Item cmake\Modules\*.cmake share\darknet\
 
   # RELEASE
   New-Item -Path .\build_win_release -ItemType directory -Force
   Set-Location build_win_release
+<<<<<<< HEAD
   if($use_ninja) {
     cmake -G "$generator" "-DCMAKE_TOOLCHAIN_FILE=$vcpkg_path\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=$vcpkg_triplet" "-DCMAKE_BUILD_TYPE=Release" $additional_build_setup ..
     $dllfolder = "."
@@ -188,14 +222,21 @@ if ($use_vcpkg) {
     cmake -G "$generator" -T "host=x64" -A "x64" "-DCMAKE_TOOLCHAIN_FILE=$vcpkg_path\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=$vcpkg_triplet" "-DCMAKE_BUILD_TYPE=Release" $additional_build_setup ..
     $dllfolder = "Release"
   }
+=======
+  cmake -G "$generator" -T "host=x64" -A "x64" "-DCMAKE_TOOLCHAIN_FILE=$vcpkg_path\scripts\buildsystems\vcpkg.cmake" "-DVCPKG_TARGET_TRIPLET=$vcpkg_triplet" "-DCMAKE_BUILD_TYPE=Release" $additional_build_setup ..
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
   cmake --build . --config Release --target install
   #cmake --build . --config Release --parallel ${number_of_build_workers} --target install  #valid only for CMake 3.12+
   Remove-Item DarknetConfig.cmake
   Remove-Item DarknetConfigVersion.cmake
+<<<<<<< HEAD
   $dllfiles = Get-ChildItem ${dllfolder}\*.dll
   if ($dllfiles) {
     Copy-Item $dllfiles ..
   }
+=======
+  Copy-Item Release\*.dll ..
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
   Set-Location ..
   Copy-Item cmake\Modules\*.cmake share\darknet\
 }
@@ -204,21 +245,29 @@ else {
   # if you want to manually force this case, remove VCPKG_ROOT env variable and remember to use "vcpkg integrate remove" in case you had enabled user-wide vcpkg integration
   New-Item -Path .\build_win_release_novcpkg -ItemType directory -Force
   Set-Location build_win_release_novcpkg
+<<<<<<< HEAD
   if($use_ninja) {
     cmake -G "$generator" $additional_build_setup ..
   }
   else {
     cmake -G "$generator" -T "host=x64" -A "x64" $additional_build_setup ..
   }
+=======
+  cmake -G "$generator" -T "host=x64" -A "x64" $additional_build_setup ..
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
   cmake --build . --config Release --target install
   #cmake --build . --config Release --parallel ${number_of_build_workers} --target install  #valid only for CMake 3.12+
   Remove-Item DarknetConfig.cmake
   Remove-Item DarknetConfigVersion.cmake
+<<<<<<< HEAD
   $dllfolder = "..\3rdparty\pthreads\bin"
   $dllfiles = Get-ChildItem ${dllfolder}\*.dll
   if ($dllfiles) {
     Copy-Item $dllfiles ..
   }
+=======
+  Copy-Item ..\3rdparty\pthreads\bin\*.dll ..
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
   Set-Location ..
   Copy-Item cmake\Modules\*.cmake share\darknet\
 }

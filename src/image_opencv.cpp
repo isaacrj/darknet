@@ -1206,6 +1206,7 @@ image image_data_augmentation(mat_cv* mat, int w, int h,
         if (blur) {
             cv::Mat dst(sized.size(), sized.type());
             if(blur == 1) cv::GaussianBlur(sized, dst, cv::Size(31, 31), 0);
+<<<<<<< HEAD
             else {
                 int ksize = (blur / 2) * 2 + 1;
                 cv::Size kernel_size = cv::Size(ksize, ksize);
@@ -1223,6 +1224,13 @@ image image_data_augmentation(mat_cv* mat, int w, int h,
 
             if (blur == 1) {
                 cv::Rect img_rect(0, 0, sized.cols, sized.rows);
+=======
+            else cv::GaussianBlur(sized, dst, cv::Size((blur / 2) * 2 + 1, (blur / 2) * 2 + 1), 0);
+            cv::Rect img_rect(0, 0, sized.cols, sized.rows);
+            //std::cout << " blur num_boxes = " << num_boxes << std::endl;
+
+            if (blur == 1) {
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab
                 int t;
                 for (t = 0; t < num_boxes; ++t) {
                     box b = float_to_box_stride(truth + t*(4 + 1), 1);

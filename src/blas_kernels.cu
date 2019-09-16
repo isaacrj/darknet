@@ -1173,6 +1173,7 @@ extern "C" void backward_scale_channels_gpu(float *in_w_h_c_delta, int size, int
 
     CHECK_CUDA(cudaPeekAtLastError());
 }
+<<<<<<< HEAD
 
 
 __global__ void sam_kernel(float *in_w_h_c, int size, int channel_size, float *scales_c, float *out)
@@ -1218,3 +1219,5 @@ extern "C" void backward_sam_gpu(float *in_w_h_c_delta, int size, int channel_si
 
     CHECK_CUDA(cudaPeekAtLastError());
 }
+=======
+>>>>>>> 2f5a0e3d0616ef67f2ac0e14d2e99ad7d3e6fbab

@@ -227,6 +227,36 @@ public:
 // --------------------------------------------------------------------------------
 
 
+// API PARA JNA
+
+extern "C" {
+	typedef Detector * DHandle;
+	
+	LIB_API DHandle darknet_detector_init(const char *configurationFilename, const char *weightsFilename, int gpu);
+
+	LIB_API image_t* darknet_allocate_direct_image(int width, int height, int channels);
+
+	LIB_API int darknet_write_direct_image(image_t *out, int step, unsigned char *bgrData);
+#ifdef OPENCV
+	LIB_API int darknet_write_direct_image(image_t *out, cv::Mat &mat);
+	LIB_API image_t* darknet_create_direct_image(cv::Mat &mat);
+	LIB_API int darknet_detector_detect_mat(DHandle detector, cv::Mat &ptr, bbox_t_container &container, int container_length, float threshold, bool use_mean);
+#endif
+	LIB_API void darknet_free_direct_image(image_t* image);
+
+	LIB_API int darknet_detector_get_net_width(DHandle detector);
+	LIB_API int darknet_detector_get_net_height(DHandle detector);
+	LIB_API int darknet_detector_get_net_color_depth(DHandle detector);
+
+	LIB_API int darknet_detector_detect_image(DHandle detector, image_t &ptr, bbox_t_container &container, int container_length, float threshold, bool use_mean);
+	LIB_API int darknet_detector_detect_image_resized(DHandle detector, image_t &ptr, int frame_width, int frame_height, bbox_t_container &container, int container_length, float threshold, bool use_mean);
+	LIB_API int darknet_detector_dispose(DHandle detector);
+
+	LIB_API int get_device_count();
+	LIB_API int get_device_name(int gpu, char* deviceName);
+}
+
+
 #if defined(TRACK_OPTFLOW) && defined(OPENCV) && defined(GPU)
 
 #include <opencv2/cudaoptflow.hpp>
